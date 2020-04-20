@@ -1,12 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
-</head>
-<body>
-	<a href="rest/user/javatpoint">Click Here</a>
-	<a href="rest/user">user list</a>
+<meta charset="UTF-8">
 
+<link rel="stylesheet" type="text/css" href="CSS/buttonStyle.css">
+<link rel="stylesheet" type="text/css" href="CSS/indexStyle.css">
+<link rel="stylesheet" type="text/css" href="CSS/displayIndex.css">
+
+<title>Simple Ajax App</title>
+</head>
+
+<body>
+	<div class="header">
+		<h1>Simple Ajax App</h1>
+		<p>A simple Ajax application using Tomcat, MySQL, Ajax, JQuery and
+			JAX-RS specifications.</p>
+	</div>
+
+	<div class="center">
+		<input type="button" class="button buttonCol" value="Display Users" id="show" />
+		<input type="button" class="button buttonCol" value="Register User" id="register" />
+		
+		<div id="searchResultdiv"></div>
+	</div>
+
+	<div class="bottom">
+		<div id="MyClockDisplay" class="clock" onload="showTime()"></div>
+	</div>
+
+	<div id="addResultDiv" style="color: red"></div>
+	<form id="userForm">
+		<table>
+			<tr>
+				<td>Name :</td>
+				<td><input type="text" name="name" id="name" required/></td>
+			</tr>
+			<tr>
+				<td>Lastname :</td>
+				<td><input type="text" name="lastname" id="lastname" required/></td>
+			</tr>
+			<tr>
+				<td>Gender :</td>
+				<td><input type="text" name="gender" id="gender" required/></td>
+			</tr>
+			<tr>
+				<td>Birthdate :</td>
+				<td><input type="date" name="birthdate" id="birthdate" required/>
+				</td>
+			</tr>
+			<tr>
+				<td>home address :</td>
+				<td><input type="text" name="homeAdd" id="homeAdd"/>
+				</td>
+			</tr>
+			<tr>
+				<td>work address :</td>
+				<td><input type="text" name="workAdd" id="workAdd"/>
+				</td>
+			</tr>
+			<tr>
+				<td><input type="submit" value="Add User Through REST" /></td>
+			</tr>
+		</table>
+	</form>
 </body>
+
+<script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
+<script src="js/scripts.js"></script>
+<script src="js/clock.js"></script>
+
 </html>
