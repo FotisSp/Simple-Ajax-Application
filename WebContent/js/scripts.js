@@ -101,12 +101,12 @@ $(document).ready(function() {
 			success : function(result) {		// TODO delete if not necessery
 //				console.log('success');
 				$('#addResultDiv').html('');
-				$('#addResultDiv').html(result);
+				$('#addResultDiv').html(result).css("color","green");
 			},
 			failure : function(result) {
 //				console.log('fail');
 				$('#addResultDiv').html('');
-				$('#addResultDiv').html(result);
+				$('#addResultDiv').html(result).css("color","red");
 			},
 			error: function( jqXhr, textStatus, errorThrown ){
 		        console.log(jqXhr);
