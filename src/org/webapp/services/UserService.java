@@ -1,6 +1,5 @@
 package org.webapp.services;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,38 +12,21 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.hibernate.Session;
+import org.webapp.models.UserModel;
 import org.webapp.entities.HomeAddress;
-import org.webapp.entities.WorkAddress;
-import org.webapp.models.HibernateUtil;
-
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.webapp.entities.User;
+import org.webapp.entities.WorkAddress;
 
 @Path("/user")
+@Produces(MediaType.APPLICATION_JSON)
 public class UserService {
-	private static final int ID = 0;
-	private static final int NAME = 1;
-	private static final int SURNAME = 2;
-	private static final int GENDER = 3;
-	private static final int BIRTHDATE = 4;
-	private static final int HOMEADDRESS = 5;
-	private static final int WORKADDRESS = 6;
 	private static List<User> users = new ArrayList<User>();
 
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> getAllUsers() throws Exception {
-		users = new ArrayList<User>();
-		
-		Session session = null;
-		User u = null;
+		UserModel um = new UserModel();
 
-		session = HibernateUtil.getSessionFactory().openSession();
-		
 		String query = "SELECT " + 
 				"    u.id, " + 
 				"    u.name, " + 
@@ -53,31 +35,20 @@ public class UserService {
 				"    webapp.users as u " + 
 				" ORDER BY u.name ASC;";
 		
-		List<Object[]> list = session.createNativeQuery(query).list();
-		for (Object[] obj : list) {
-			u = new User();
-			u.setId((Integer)obj[ID]);
-			u.setName((String)obj[NAME]);
-			u.setSurname((String)obj[SURNAME]);
-			users.add(u);
-         }
-		
 		//TODO
 //	    ObjectMapper mapper = new ObjectMapper();
 //	    mapper.setSerializationInclusion(Include.NON_NULL);
-
 //		System.out.println(mapper.writeValueAsString(users));
-
+		
+		users = um.getUsers(query); 
+		
 		return users;
 	}
 	
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("{id}")
 	public User getUser(@PathParam("id") int id) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Session session = HibernateUtil.getSessionFactory().openSession();
-		User u = new User();
+		UserModel um = new UserModel();
 		
 		String query = "SELECT DISTINCT" + 
 				"    u.id," + 
@@ -96,26 +67,7 @@ public class UserService {
 				" WHERE" + 
 				"   u.id = " + id + ";";
 		
-		Object[] user = (Object[]) session.createNativeQuery(query).getSingleResult();
-		u.setId((Integer)user[ID]);
-		u.setName((String)user[NAME]);
-		u.setSurname((String)user[SURNAME]);
-		u.setGender((String)user[GENDER]);
-		u.setBirthdate(dateFormat.format(user[BIRTHDATE]));
-		
-		HomeAddress homeAdd = new HomeAddress();
-		homeAdd.setId(id);
-		homeAdd.setAddress((String)user[HOMEADDRESS]);
-		homeAdd.setUser(u);
-		u.setHomeAddress(homeAdd);
-		
-		WorkAddress workAdd = new WorkAddress();
-		workAdd.setId(id);
-		workAdd.setAddress((String)user[WORKADDRESS]);
-		workAdd.setUser(u);
-		u.setWorkAddress(workAdd);
-		
-		return u;
+		return um.getSingleUser(query, id);
 	}
 	
 	@POST
@@ -123,9 +75,23 @@ public class UserService {
 	@Produces(MediaType.TEXT_HTML)
 	@Path("/register")
 	public Response registerUser(User us) {
-		System.out.println("test");
+		UserModel um = new UserModel();
+
+		HomeAddress hAdd = us.getHomeAddress();
+		hAdd.setId(us.getId());
+		hAdd.setUser(us);
+		us.setHomeAddress(hAdd);
+		
+		WorkAddress wAdd = us.getWorkAddress();
+		wAdd.setId(us.getId());
+		wAdd.setUser(us);
+		us.setWorkAddress(wAdd);
+		
 		users.add(us);
-		return Response.status(200).entity("Successfully added user " + us.getName()).build();
+		if(um.create(us)) {
+			return Response.status(200).entity("Successfully registered user " + us.getName()).build();
+		} 		
+		return Response.status(200).entity("Failed registering user " + us.getName()).build();
 	}
 	
 	

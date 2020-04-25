@@ -30,7 +30,6 @@ public class User implements Serializable {
 	private String name;
 	private String surname;
 	private String gender;
-	
 	private Date birthdate = null;
 
 	// TODO FtechType Lazy to load on demand , Eager to preload among all others
@@ -89,20 +88,16 @@ public class User implements Serializable {
 		}
 	}
 
-	public String getHomeAddress() {
-		if (homeAdd == null )
-			return "";
-		return homeAdd.getAddress();
+	public HomeAddress getHomeAddress() {
+		return homeAdd;
 	}
 
 	public void setHomeAddress(HomeAddress address) {
 		homeAdd = address;
 	}
 	
-	public String getWorkAddress() {
-		if (workAdd == null)
-			return "";
-		return workAdd.getAddress();
+	public WorkAddress getWorkAddress() {
+		return workAdd;
 	}
 
 	public void setWorkAddress(WorkAddress address) {

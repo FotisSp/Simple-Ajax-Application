@@ -1,23 +1,9 @@
-html {
-	scroll-behavior: smooth;
-	height: 100%;
-	margin: 0;
-}
-
-body {
-	background-image: url('../Images/background.png');
-	background-repeat: no-repeat; 
-	background-attachment : fixed;
-	background-size: cover;
-	background-position: center;
-	position: relative;
-}
-
 #users {
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	table-layout: fixed;
 	border-collapse: collapse;
 	width: 50%;
+	margin: 0 auto;
 }
 
 #users td, #users th {

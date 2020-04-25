@@ -1,20 +1,10 @@
-html {
-	scroll-behavior: smooth;
-	height: 100%;
-	margin: 0;
-}
-
-.header {
-	padding: 40px;
-}
-
-.registerData {
+#userForm {
 	position: absolute;
 	padding: 16px;
 	left: 30%;
 	right: 30%;
 }
-  
+
 input[type=text], input[type=date], select {
   width: 100%;
   padding: 15px;
@@ -22,6 +12,9 @@ input[type=text], input[type=date], select {
   display: inline-block;
   border: none;
   background: #d1d8e8;
+	-webkit-box-sizing: content-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: content-box;    /* Firefox, other Gecko */
+  box-sizing: content-box;         /* Opera/IE 8+ */
 }
 
 input[type=text]:focus, input[type=date]:focus, select:focus {

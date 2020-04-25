@@ -1,11 +1,12 @@
 html {
+	scroll-behavior: smooth;
 	height: 100%;
 	margin: 0;
 }
 
 body {
 	background-image: url('../Images/background.png');
-	background-repeat: no-repeat; 
+	background-repeat: no-repeat;
 	background-attachment : fixed;
 	background-size: cover;
 	background-position: center;
