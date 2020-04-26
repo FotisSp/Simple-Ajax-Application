@@ -7,6 +7,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.NativeQuery;
 import org.webapp.entities.HomeAddress;
 import org.webapp.entities.User;
 import org.webapp.entities.WorkAddress;
@@ -108,13 +109,39 @@ public class UserModel {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			System.out.println("\nrollback\n");
+			System.out.println("\nrollback\n");		// TODO delete
 			e.printStackTrace();
 			u = null;
 		} finally {
 			session.close();
 		}
 		return u;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public boolean deleteUser(String query) {
+		Session session = null;
+		Transaction transaction = null;
+		
+		try {
+			session = sessionFactory.openSession();
+			transaction = session.beginTransaction();
+
+			NativeQuery q = session.createNativeQuery(query);
+			q.executeUpdate();
+			
+			transaction.commit();
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			System.out.println("\nrollback\n");		// TODO delete
+			e.printStackTrace();
+			return false;
+		} finally {
+			session.close();
+		}
+		return true;
 	}
 
 }

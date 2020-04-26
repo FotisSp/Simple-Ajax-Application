@@ -1,35 +1,58 @@
 $(document).ready(function() {
 	$("#show").click(function() {
-		$.ajax({
-			url : "rest/user",
-			success : function(result) {
-				$('.center').html('');
-				
-				$('.header h1').html('List of all Registered Users');
-				$('.header p').html('');
-				var _center = 
-					'<table id="users">' +
-						'<thead>' +
-							'<tr>' +
-								'<th>Name</th>' +
-								'<th>Surname</th>' +
-							'</tr>' +
-						'</thead>' +
-						'<tbody>';
-				$.each(result, function(index, user) {
-					_center +=
-						'<tr><td>' + user.name + '</td>'
-							+'<td>' + user.surname + '</td>'
-						+'</tr>';
-				});
-				_center +=
-						'</tbody>' +
-					'</table>' + 
-					'<input type="button" class="button buttonCol" name="back"'+
-					'value="Back" id="back">';
-				$('.center').append(_center);
-			}
-		});
+		showAllUsers();
+	});
+
+	$("div.center").on('click','#users tr', function(event) {
+	  var id = $(this).attr('id');
+	  $.ajax({
+	    url : "rest/user/" + id,
+	    type : 'get',
+	    dataType: 'json',
+	    success : function(result) {
+	        $('.center').html('');
+					$('.header h1').html('User Info');
+
+	        $('.center').append(
+	        	'<table id="user" name="' + result.id + '">' +
+	        		'<tr>' +
+	        			'<td>Name</td>' +
+	        			'<td>' + result.name + '</td>' +
+	        		'</tr>' +
+	        		'<tr>' +
+	        			'<td>Lastname</td>' +
+	        			'<td>' + result.surname + '</td>' +
+	        		'</tr>' +
+	        		'<tr>' +
+	        			'<td>Gender</td>' +
+	        			'<td>' + result.gender + '</td>' +
+	        		'</tr>' +
+	        		'<tr>' +
+	        			'<td>Birthdate</td>' +
+	        			'<td>' + result.birthdate + '</td>' +
+	        		'</tr>' +
+	        		'<tr>' +
+	        			'<td>Home Address</td>' +
+	        			'<td>' + result.homeAddress.address + '</td>' +
+	        		'</tr>' +
+	        		'<tr>' +
+	        			'<td>Work Address</td>' +
+	        			'<td>' + result.workAddress.address + '</td>' +
+	        		'</tr>' +
+	        	'</table>' +
+						'<input type="button" class="button buttonCol" name="back" value="Back" id="backToList">' +
+						'<input type="button" class="button delButton" name="deleteUser" value="Delete" id="deleteUser">'
+	        );
+	    },
+	    failure : function(result) {
+	      console.log('fail');
+	      $('#addResultDiv').html('');
+	      $('#addResultDiv').html(result).css("color","red");
+	    },
+	    error: function( jqXhr, textStatus, errorThrown ){
+	          console.log(jqXhr);
+	    }
+	  });
 	});
 
 	$("#register").click(function() {
@@ -69,7 +92,29 @@ $(document).ready(function() {
 	});
 
 	$("div.center").on('click','#back',function() {
-			location.reload();
+//			location.reload();
+			window.location.href = '/SimpleAjaxApplication';
+	});
+
+	$("div.center").on('click','#backToList', function() {
+		showAllUsers();
+	});
+
+	$("div.center").on('click','#deleteUser', function(event) {
+		$.confirm({
+			animation: 'zoom',
+			theme: 'supervan',
+			title: 'Delete',
+			content: 'Do you want to delete user ?',
+	    escapeKey: 'No',
+			autoClose: 'No|8000',
+			buttons: {
+				Yes: function () {
+					deleteUser();
+				},
+				No: function () {}
+			}
+		});
 	});
 
 	$("div.center").on('submit',function() {
@@ -126,4 +171,54 @@ $(document).ready(function() {
 		});
 		return false;
 	});
+
+	function showAllUsers() {
+		$.ajax({
+			url : "rest/user",
+			success : function(result) {
+				$('.center').html('');
+
+				$('.header h1').html('List of all Registered Users');
+				$('.header p').html('');
+				var _center =
+					'<table id="users">' +
+						'<thead>' +
+							'<tr>' +
+								'<th>Name</th>' +
+								'<th>Surname</th>' +
+							'</tr>' +
+						'</thead>' +
+						'<tbody>';
+				$.each(result, function(index, user) {
+					_center +=
+						'<tr id="' + user.id + '"><td>' + user.name + '</td>'
+							+'<td>' + user.surname + '</td>'
+						+'</tr>';
+				});
+				_center +=
+						'</tbody>' +
+					'</table>' +
+					'<input type="button" class="button buttonCol" name="back"'+
+					'value="Back" id="back">';
+				$('.center').append(_center);
+			}
+		});
+	}
+
+	function deleteUser() {
+		$.ajax({
+			url : "rest/user/delete/" + $('#user').attr('name'),
+			type : 'get',
+			dataType : 'json',
+			success : function(result) {
+				showAllUsers();
+			},
+			failure : function(result) {
+				console.log("result failed : " + result);
+			},
+			error: function( jqXhr, textStatus, errorThrown ){
+				console.log(jqXhr);
+			}
+		});
+	}
 });

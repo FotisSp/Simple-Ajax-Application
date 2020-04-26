@@ -94,5 +94,15 @@ public class UserService {
 		return Response.status(200).entity("Failed registering user " + us.getName()).build();
 	}
 	
+	@GET
+	@Path("/delete/{id}")
+	public boolean deleteUser(@PathParam("id") int id) {
+		UserModel um = new UserModel();
+		
+		String query = "DELETE FROM `webapp`.`users` WHERE (`id` = '" + id + "');";
+		
+		return um.deleteUser(query);
+	}
+	
 	
 }
