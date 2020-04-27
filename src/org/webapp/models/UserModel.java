@@ -43,6 +43,36 @@ public class UserModel {
 		return result;
 	}
 	
+	@SuppressWarnings("rawtypes")
+	public boolean update(List<String> queries) {
+		boolean result = true;
+		Session session = null;
+		Transaction transaction = null;
+		try {
+			session = sessionFactory.getCurrentSession();
+			transaction = session.beginTransaction();
+			
+			for(String query : queries) {
+				NativeQuery q = session.createNativeQuery(query);
+				int res = q.executeUpdate();
+				if(res != 1)
+					throw new Exception("One or more queries failed!");
+			}
+				
+			result = true;
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			result = false;
+		} finally {
+			session.close();
+		}
+		return result;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<User> getUsers(String query) {
 		Session session = null;
@@ -53,7 +83,7 @@ public class UserModel {
 		try {
 			session = sessionFactory.openSession();
 			transaction = session.beginTransaction();
-			
+
 			List<Object[]> list = session.createNativeQuery(query).list();
 			for (Object[] obj : list) {
 				u = new User();
@@ -109,7 +139,6 @@ public class UserModel {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			System.out.println("\nrollback\n");		// TODO delete
 			e.printStackTrace();
 			u = null;
 		} finally {
@@ -135,7 +164,6 @@ public class UserModel {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			System.out.println("\nrollback\n");		// TODO delete
 			e.printStackTrace();
 			return false;
 		} finally {

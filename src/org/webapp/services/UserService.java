@@ -20,9 +20,8 @@ import org.webapp.entities.WorkAddress;
 @Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
 public class UserService {
-	private static List<User> users = new ArrayList<User>();
+	private static List<User> users = new ArrayList<User>();		// TODO maybe change it to a map
 
-//	@SuppressWarnings("unchecked")
 	@GET
 	public List<User> getAllUsers() throws Exception {
 		UserModel um = new UserModel();
@@ -34,11 +33,6 @@ public class UserService {
 				" FROM " + 
 				"    webapp.users as u " + 
 				" ORDER BY u.name ASC;";
-		
-		//TODO
-//	    ObjectMapper mapper = new ObjectMapper();
-//	    mapper.setSerializationInclusion(Include.NON_NULL);
-//		System.out.println(mapper.writeValueAsString(users));
 		
 		users = um.getUsers(query); 
 		
@@ -104,5 +98,52 @@ public class UserService {
 		return um.deleteUser(query);
 	}
 	
-	
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_HTML)
+	@Path("/edit")
+	public Response editUser(User us) {
+		List<String> queries = new ArrayList<String>();
+		UserModel um = new UserModel();
+		
+		String updQuery = "UPDATE webapp.users SET "
+				+ "name = '" + us.getName() + "', "
+				+ "surname = '" + us.getSurname() + "', "
+				+ "gender = '" + us.getGender() + "' ";
+		if (us.defaultBirthdate() != "") {
+			updQuery += ",birthdate = '" + us.defaultBirthdate() + "' ";
+		}
+		updQuery += "WHERE id = '" + us.getId() + "';";
+		queries.add(updQuery);
+		
+		if(us.getHomeAddress().getAddress() != "") {
+			HomeAddress hAdd = us.getHomeAddress();
+			hAdd.setId(us.getId());
+			hAdd.setUser(us);
+			us.setHomeAddress(hAdd);
+			
+			updQuery = "UPDATE webapp.home_address SET "
+					+ "homeAddress = '" + hAdd.getAddress() + "'"
+					+ " WHERE user_id = '" + us.getId() + "';";
+			queries.add(updQuery);
+		}
+		
+		if(us.getWorkAddress().getAddress() != "") {
+			WorkAddress wAdd = us.getWorkAddress();
+			wAdd.setId(us.getId());
+			wAdd.setUser(us);
+			us.setWorkAddress(wAdd);
+			
+			updQuery = "UPDATE webapp.work_address SET "
+					+ "workAddress = '" + wAdd.getAddress() + "'"
+					+ " WHERE user_id = '" + us.getId() + "';";
+			queries.add(updQuery);
+		}
+		
+		users.add(us);		// TODO update not add as new
+		if(um.update(queries)) {
+			return Response.status(200).entity("Successfully updated user " + us.getName()).build();
+		} 		
+		return Response.status(200).entity("Failed updating user " + us.getName()).build();
+	}
 }

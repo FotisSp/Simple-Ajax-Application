@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 //import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -72,22 +74,33 @@ public class User implements Serializable {
 	}
 
 	public String getBirthdate() {
-		dateFormat = new SimpleDateFormat("dd MMM yyyy");
+		dateFormat = new SimpleDateFormat("d MMM yyyy", Locale.US);
 		if (birthdate == null)
 			return "";
 		return dateFormat.format(birthdate);
+	}
+	
+	@Transient
+	public String defaultBirthdate() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			return dateFormat.format(birthdate);
+		}catch (NullPointerException e) {
+			return "";
+		}
 	}
 
 	public void setBirthdate(String birthdate) {
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			this.birthdate = dateFormat.parse(birthdate);
+			if(birthdate != "")
+				this.birthdate = dateFormat.parse(birthdate);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
+	
 	public HomeAddress getHomeAddress() {
 		return homeAdd;
 	}
