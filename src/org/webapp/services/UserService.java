@@ -17,13 +17,24 @@ import org.webapp.entities.HomeAddress;
 import org.webapp.entities.User;
 import org.webapp.entities.WorkAddress;
 
+/**
+ * @author Fotis Spanopoulos
+ *
+ */
 @Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
 public class UserService {
-	private static List<User> users = new ArrayList<User>();		// TODO maybe change it to a map
+	private static List<User> users = new ArrayList<User>();
 
+	/**
+	 * This method is called through AJAX to retrieve a List with
+	 * all the registered users.
+	 * Called using the path : /rest/user
+	 * 
+	 * @return	List with all the registered users.
+	 */
 	@GET
-	public List<User> getAllUsers() throws Exception {
+	public List<User> getAllUsers() {
 		UserModel um = new UserModel();
 
 		String query = "SELECT " + 
@@ -39,6 +50,13 @@ public class UserService {
 		return users;
 	}
 	
+	/**
+	 * Retrieves a single user based on the selected id.
+	 * Called using the path : /rest/user/{id}
+	 * 
+	 * @param 	id	the user id to be searched for.
+	 * @return		User object that contains the requested info.
+	 */
 	@GET
 	@Path("{id}")
 	public User getUser(@PathParam("id") int id) {
@@ -64,6 +82,12 @@ public class UserService {
 		return um.getSingleUser(query, id);
 	}
 	
+	/**
+	 * Registers a user to the SQL database.
+	 * 
+	 * @param 	us	A User Object with the info about the user.
+	 * @return		A response message which is shown to the user. 
+	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_HTML)
@@ -88,6 +112,13 @@ public class UserService {
 		return Response.status(200).entity("Failed registering user " + us.getName()).build();
 	}
 	
+	/**
+	 * Deletes the selected user from the SQL Database
+	 * using a native SQL query.
+	 * 
+	 * @param 	id	The id of the selected user.
+	 * @return		True if delete was successful False otherwise.
+	 */
 	@GET
 	@Path("/delete/{id}")
 	public boolean deleteUser(@PathParam("id") int id) {
@@ -98,6 +129,15 @@ public class UserService {
 		return um.deleteUser(query);
 	}
 	
+	/**
+	 * Updates the information of the selected user accordingly.
+	 * For each table is build a different query and then added 
+	 * to a list with all the queries to be processed by the 
+	 * UserModel class.
+	 * 
+	 * @param 	us	User object with the updated information.
+	 * @return		Response message to the user (successful or not).
+	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_HTML)
@@ -140,7 +180,6 @@ public class UserService {
 			queries.add(updQuery);
 		}
 		
-		users.add(us);		// TODO update not add as new
 		if(um.update(queries)) {
 			return Response.status(200).entity("Successfully updated user " + us.getName()).build();
 		} 		

@@ -18,9 +18,12 @@ import javax.persistence.Transient;
 
 //import com.fasterxml.jackson.annotation.JsonInclude;
 
+/**
+ * @author Fotis Spanopoulos
+ *
+ */
 @Entity
 @Table(name = "users")
-//@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -34,7 +37,9 @@ public class User implements Serializable {
 	private String gender;
 	private Date birthdate = null;
 
-	// TODO FtechType Lazy to load on demand , Eager to preload among all others
+	/**
+	 * FtechType Lazy to load on demand , Eager to preload among all others
+	 */
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
 	private HomeAddress homeAdd;
 
@@ -96,7 +101,6 @@ public class User implements Serializable {
 			if(birthdate != "")
 				this.birthdate = dateFormat.parse(birthdate);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

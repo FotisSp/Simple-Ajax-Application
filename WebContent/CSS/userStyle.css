@@ -1,0 +1,72 @@
+.ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year {
+	padding: 0px;
+	font-size: 14px !important;
+}
+
+.ui-datepicker td a {
+	text-align: center !important;
+}
+
+#userForm, #editForm {
+	position: absolute;
+	padding: 16px;
+	left: 30%;
+	right: 30%;
+}
+
+#user {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	table-layout: fixed;
+	border-collapse: collapse;
+	width: 50%;
+	margin: 25px auto;
+}
+
+#user td {
+	padding: 8px;
+	text-align: center;
+}
+
+#user tr:nth-child(even) {
+	background-color: #c0ceea;
+}
+
+hr {
+	border: 1px solid black;
+	margin-bottom: 25px;
+}
+
+.serverMessage {
+	text-align: center;
+	font-size: 20px;
+}
+
+#users {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	table-layout: fixed;
+	border-collapse: collapse;
+	width: 50%;
+	margin: 0 auto;
+}
+
+#users td, #users th {
+	padding: 8px;
+	text-align: center;
+}
+
+#users tr:nth-child(even) {
+	background-color: #c0ceea;
+}
+
+#users tbody tr:hover {
+	background-color: #ddd;
+	cursor: pointer;
+}
+
+#users th {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align: center;
+	background-color: #8B69BD;
+	color: white;
+}

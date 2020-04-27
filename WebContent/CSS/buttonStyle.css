@@ -54,3 +54,7 @@
 #topBtn:hover {
 	background-color: #555;
 }
+
+.buttonContainer {
+	text-align: center;
+}

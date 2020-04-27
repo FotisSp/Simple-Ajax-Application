@@ -11,6 +11,10 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * @author Fotis Spanopoulos
+ *
+ */
 @Entity
 @Table(name = "home_address")
 public class HomeAddress implements Serializable {

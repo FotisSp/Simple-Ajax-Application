@@ -28,7 +28,7 @@ $(document).ready(function() {
 					'<option value="Other">Other</option>'+
 				'</select>'+
 				'<label for="birthdate"><b>Birthdate</b></label>'+
-				'<input type="text" placeholder="Enter Birthdate *" name="birthdate" id="birthdate" required>'+
+				'<input type="text" placeholder="Enter Birthdate *" name="birthdate" id="birthdate" readonly="readonly" required>'+
 				'<input type="hidden" name="altDate" id="altDate">'+
 				'<label for="homeAddress"><b>Home Address</b></label>'+
 				'<input type="text" placeholder="Enter Home Address" name="homeAdd" id="homeAdd">'+
@@ -109,7 +109,7 @@ $(document).ready(function() {
 							'<option value="Other">Other</option>'+
 						'</select>'+
 						'<label for="birthdate"><b>Birthdate</b></label>'+
-						'<input type="text" placeholder="Enter Birthdate *" name="birthdate" id="birthdate" value="' + result.birthdate + '" required>'+
+						'<input type="text" placeholder="Enter Birthdate *" name="birthdate" id="birthdate" value="' + result.birthdate + '" readonly="readonly" required>'+
 						'<input type="hidden" name="altDate" id="altDate">'+
 						'<label for="homeAddress"><b>Home Address</b></label>'+
 						'<input type="text" placeholder="Enter Home Address" name="homeAdd" id="homeAdd" value="' + result.homeAddress.address + '">'+
@@ -171,7 +171,7 @@ $(document).ready(function() {
 			url : "rest/user/edit",
 			contentType : 'application/json',
 			data : arr,
-			success : function(result) {		// TODO delete if not necessery
+			success : function(result) {
 				$('#addResultDiv').html('');
 				if (result.includes('Failed')) {
 					$('#addResultDiv').html(result).css("color","red");
@@ -225,7 +225,7 @@ $(document).ready(function() {
 			url : "rest/user/register",
 			contentType : 'application/json',
 			data : arr,
-			success : function(result) {		// TODO delete if not necessery
+			success : function(result) {
 				$('#addResultDiv').html('');
 				$('#addResultDiv').html(result).css("color","green");
 			},

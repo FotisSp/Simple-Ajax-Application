@@ -12,6 +12,10 @@ import org.webapp.entities.HomeAddress;
 import org.webapp.entities.User;
 import org.webapp.entities.WorkAddress;
 
+/**
+ * @author Fotis Spanopoulos
+ *
+ */
 public class UserModel {
 
 	protected SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -23,6 +27,13 @@ public class UserModel {
 	private static final int HOMEADDRESS = 5;
 	private static final int WORKADDRESS = 6;
 
+	/**
+	 * Creates a new user and returns a boolean value accordingly.
+	 * If creation fails roll back is executed.
+	 * 
+	 * @param 	u 	User object with all the necessary information
+	 * @return 		True if creation was successful, False otherwise
+	 */
 	public boolean create(User u) {
 		boolean result = true;
 		Session session = null;
@@ -43,6 +54,14 @@ public class UserModel {
 		return result;
 	}
 	
+	/**
+	 * Updates the information of a single user to the SQL Database.
+	 * The List contains maximum of 3 queries one for each table.
+	 * If one of the queries fails rollback is executed.
+	 * 
+	 * @param 	queries A list of Strings that contain Native SQL Queries
+	 * @return 			True if all queries executed successfully, False otherwise
+	 */
 	@SuppressWarnings("rawtypes")
 	public boolean update(List<String> queries) {
 		boolean result = true;
@@ -73,6 +92,13 @@ public class UserModel {
 		return result;
 	}
 	
+	/**
+	 * Returns a List of all the registered users inside the SQL Database.
+	 * If something fails roll back is executed.
+	 * 
+	 * @param 	query 	A single Native SQL query to retrieve all users
+	 * @return 			List of User objects which contain the information about the Users.
+	 */
 	@SuppressWarnings("unchecked")
 	public List<User> getUsers(String query) {
 		Session session = null;
@@ -105,6 +131,15 @@ public class UserModel {
 		return users;
 	}
 	
+	/**
+	 * Returns a single User object which contains the 
+	 * information about the user that was selected.
+	 * If something fails during this procedure roll back is executed.
+	 * 
+	 * @param 	query	Native SQL query to retrieve single user.
+	 * @param 	id		id to populate the foreign keys of child tables.
+	 * @return			Single User object with the requested information. 
+	 */
 	public User getSingleUser(String query, int id) {
 		Session session = null;
 		Transaction transaction = null;
@@ -147,6 +182,12 @@ public class UserModel {
 		return u;
 	}
 	
+	/**
+	 * Deletes the specified user with the help of a Native SQL query. 
+	 * 
+	 * @param 	query	Native SQL query to delete user.
+	 * @return			True if delete was successful False otherwise. 
+	 */
 	@SuppressWarnings("rawtypes")
 	public boolean deleteUser(String query) {
 		Session session = null;
