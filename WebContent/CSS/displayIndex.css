@@ -6,6 +6,21 @@
 	margin: 0 auto;
 }
 
+#searchField {
+	width: 10%;
+	border-radius: 50px;
+	padding: 20px;
+	font-size: 16px;
+	text-align: center;
+	webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+}
+
+#searchField:focus {
+	width: 40%;
+	text-align: left;
+}
+
 #users td, #users th {
 	padding: 8px;
 	text-align: center;

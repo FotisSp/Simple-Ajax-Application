@@ -249,6 +249,14 @@ $(document).ready(function() {
 		return false;
 	});
 
+	$("#addResultDiv").on("keyup", '#searchField', function() {
+		console.log('i am here ');
+		var value = $(this).val().toLowerCase();
+		$("#usersTable tr").filter(function() {
+			$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+		});
+	});
+
 	function showUser(id) {
 		$.ajax({
 	    url : "rest/user/" + id,
@@ -309,6 +317,7 @@ $(document).ready(function() {
 
 				$('.header h1').html('List of all Registered Users');
 				$('.header p').html('');
+				$('#addResultDiv').html('<input id="searchField" type="text" placeholder="Search..">');
 				var _center =
 					'<table id="users">' +
 						'<thead>' +
@@ -317,7 +326,7 @@ $(document).ready(function() {
 								'<th>Lastname</th>' +
 							'</tr>' +
 						'</thead>' +
-						'<tbody>';
+						'<tbody id="usersTable">';
 				$.each(result, function(index, user) {
 					_center +=
 						'<tr id="' + user.id + '"><td>' + user.name + '</td>'
