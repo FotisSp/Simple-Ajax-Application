@@ -250,7 +250,6 @@ $(document).ready(function() {
 	});
 
 	$("#addResultDiv").on("keyup", '#searchField', function() {
-		console.log('i am here ');
 		var value = $(this).val().toLowerCase();
 		$("#usersTable tr").filter(function() {
 			$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
