@@ -1,6 +1,5 @@
 package org.webapp.models;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,9 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
-import org.webapp.entities.HomeAddress;
 import org.webapp.entities.User;
-import org.webapp.entities.WorkAddress;
 
 /**
  * @author Fotis Spanopoulos
@@ -22,10 +19,6 @@ public class UserModel {
 	private static final int ID = 0;
 	private static final int NAME = 1;
 	private static final int SURNAME = 2;
-	private static final int GENDER = 3;
-	private static final int BIRTHDATE = 4;
-	private static final int HOMEADDRESS = 5;
-	private static final int WORKADDRESS = 6;
 
 	/**
 	 * Creates a new user and returns a boolean value accordingly.
@@ -41,7 +34,7 @@ public class UserModel {
 		try {
 			session = sessionFactory.openSession();
 			transaction = session.beginTransaction();
-			session.save(u);
+			session.persist(u);
 			transaction.commit();
 		} catch (Exception e) {
 			if (transaction != null) {
@@ -56,14 +49,12 @@ public class UserModel {
 	
 	/**
 	 * Updates the information of a single user to the SQL Database.
-	 * The List contains maximum of 3 queries one for each table.
-	 * If one of the queries fails rollback is executed.
+	 * User object contains the required info to be updated.
 	 * 
-	 * @param 	queries A list of Strings that contain Native SQL Queries
-	 * @return 			True if all queries executed successfully, False otherwise
+	 * @param 	us 		A User Object containing the updated info.
+	 * @return 			True if update was successful, False otherwise
 	 */
-	@SuppressWarnings("rawtypes")
-	public boolean update(List<String> queries) {
+	public boolean update(User us) {
 		boolean result = true;
 		Session session = null;
 		Transaction transaction = null;
@@ -71,12 +62,7 @@ public class UserModel {
 			session = sessionFactory.getCurrentSession();
 			transaction = session.beginTransaction();
 			
-			for(String query : queries) {
-				NativeQuery q = session.createNativeQuery(query);
-				int res = q.executeUpdate();
-				if(res != 1)
-					throw new Exception("One or more queries failed!");
-			}
+			session.merge(us);
 				
 			result = true;
 			transaction.commit();
@@ -143,31 +129,13 @@ public class UserModel {
 	public User getSingleUser(String query, int id) {
 		Session session = null;
 		Transaction transaction = null;
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		User u = new User();
 		
 		try {
 			session = sessionFactory.openSession();
 			transaction = session.beginTransaction();
 
-			Object[] user = (Object[]) session.createNativeQuery(query).getSingleResult();
-			u.setId((Integer)user[ID]);
-			u.setName((String)user[NAME]);
-			u.setSurname((String)user[SURNAME]);
-			u.setGender((String)user[GENDER]);
-			u.setBirthdate(dateFormat.format(user[BIRTHDATE]));
-			
-			HomeAddress homeAdd = new HomeAddress();
-			homeAdd.setId(id);
-			homeAdd.setAddress((String)user[HOMEADDRESS]);
-			homeAdd.setUser(u);
-			u.setHomeAddress(homeAdd);
-			
-			WorkAddress workAdd = new WorkAddress();
-			workAdd.setId(id);
-			workAdd.setAddress((String)user[WORKADDRESS]);
-			workAdd.setUser(u);
-			u.setWorkAddress(workAdd);
+			u = session.createNativeQuery(query,User.class).getSingleResult();
 			
 			transaction.commit();
 		} catch (Exception e) {
@@ -175,7 +143,6 @@ public class UserModel {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			u = null;
 		} finally {
 			session.close();
 		}

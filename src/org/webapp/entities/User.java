@@ -16,8 +16,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-//import com.fasterxml.jackson.annotation.JsonInclude;
-
 /**
  * @author Fotis Spanopoulos
  *
@@ -40,10 +38,10 @@ public class User implements Serializable {
 	/**
 	 * FtechType Lazy to load on demand , Eager to preload among all others
 	 */
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, optional = true)
 	private HomeAddress homeAdd;
 
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, optional = true)
 	private WorkAddress workAdd;
 
 	public int getId() {
@@ -96,12 +94,19 @@ public class User implements Serializable {
 	}
 
 	public void setBirthdate(String birthdate) {
-		dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy", Locale.ENGLISH);
+		dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+		
 		try {
-			if(birthdate != "")
-				this.birthdate = dateFormat.parse(birthdate);
+			this.birthdate = sdf.parse(birthdate);
+			String tmpDate = dateFormat.format(this.birthdate);
+			this.birthdate = dateFormat.parse(tmpDate);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			try {
+				this.birthdate = dateFormat.parse(birthdate);
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 	

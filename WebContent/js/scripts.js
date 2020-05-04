@@ -29,7 +29,6 @@ $(document).ready(function() {
 				'</select>'+
 				'<label for="birthdate"><b>Birthdate</b></label>'+
 				'<input type="text" placeholder="Enter Birthdate *" name="birthdate" id="birthdate" readonly="readonly" required>'+
-				'<input type="hidden" name="altDate" id="altDate">'+
 				'<label for="homeAddress"><b>Home Address</b></label>'+
 				'<input type="text" placeholder="Enter Home Address" name="homeAdd" id="homeAdd">'+
 				'<label for="workAddress"><b>Work Address</b></label>'+
@@ -52,8 +51,6 @@ $(document).ready(function() {
 			minDate: "1 Jan 1900",
 			maxDate: "27 Apr 2020",
 			dateFormat: "d M yy",
-			altField: "#altDate",
-			altFormat: "yy-mm-dd"
 		}).focus();
 	} );
 
@@ -73,7 +70,7 @@ $(document).ready(function() {
 			content: 'Do you want to delete user ?',
 	    escapeKey: 'No',
 			autoClose: 'No|8000',
-			typeAnimated: false,				// fixes bug that messages
+			typeAnimated: false,		// fixes bug that messages
 			animateFromElement: false,	// comes from the upper left corner
 			buttons: {
 				Yes: function () {
@@ -110,7 +107,6 @@ $(document).ready(function() {
 						'</select>'+
 						'<label for="birthdate"><b>Birthdate</b></label>'+
 						'<input type="text" placeholder="Enter Birthdate *" name="birthdate" id="birthdate" value="' + result.birthdate + '" readonly="readonly" required>'+
-						'<input type="hidden" name="altDate" id="altDate">'+
 						'<label for="homeAddress"><b>Home Address</b></label>'+
 						'<input type="text" placeholder="Enter Home Address" name="homeAdd" id="homeAdd" value="' + result.homeAddress.address + '">'+
 						'<label for="workAddress"><b>Work Address</b></label>'+
@@ -144,12 +140,7 @@ $(document).ready(function() {
 		name = $form.find("#name").val();
 		lastname = $form.find("#lastname").val();
 		gender = $form.find("#gender").val();
-		birthdate = $form.find("#altDate").val();
-
-		if (birthdate === '') {
-			birthdate = $form.find("#altDate").val();
-		}
-
+		birthdate = $form.find("#birthdate").val(); 
 		hAdd = $form.find("#homeAdd").val();
 		wAdd = $form.find("#workAdd").val();
 		var arr = {
@@ -204,7 +195,7 @@ $(document).ready(function() {
 		name = $form.find("#name").val();
 		lastname = $form.find("#lastname").val();
 		gender = $form.find("#gender").val();
-		birthdate = $form.find("#altDate").val();
+		birthdate = $form.find("#birthdate").val();
 		hAdd = $form.find("#homeAdd").val();
 		wAdd = $form.find("#workAdd").val();
 		var arr = {

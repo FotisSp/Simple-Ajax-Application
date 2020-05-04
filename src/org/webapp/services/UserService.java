@@ -131,9 +131,6 @@ public class UserService {
 	
 	/**
 	 * Updates the information of the selected user accordingly.
-	 * For each table is build a different query and then added 
-	 * to a list with all the queries to be processed by the 
-	 * UserModel class.
 	 * 
 	 * @param 	us	User object with the updated information.
 	 * @return		Response message to the user (successful or not).
@@ -143,18 +140,7 @@ public class UserService {
 	@Produces(MediaType.TEXT_HTML)
 	@Path("/edit")
 	public Response editUser(User us) {
-		List<String> queries = new ArrayList<String>();
 		UserModel um = new UserModel();
-		
-		String updQuery = "UPDATE webapp.users SET "
-				+ "name = '" + us.getName() + "', "
-				+ "surname = '" + us.getSurname() + "', "
-				+ "gender = '" + us.getGender() + "' ";
-		if (us.defaultBirthdate() != "") {
-			updQuery += ",birthdate = '" + us.defaultBirthdate() + "' ";
-		}
-		updQuery += "WHERE id = '" + us.getId() + "';";
-		queries.add(updQuery);
 		
 		if(us.getHomeAddress().getAddress() != "") {
 			HomeAddress hAdd = us.getHomeAddress();
@@ -162,10 +148,6 @@ public class UserService {
 			hAdd.setUser(us);
 			us.setHomeAddress(hAdd);
 			
-			updQuery = "UPDATE webapp.home_address SET "
-					+ "homeAddress = '" + hAdd.getAddress() + "'"
-					+ " WHERE user_id = '" + us.getId() + "';";
-			queries.add(updQuery);
 		}
 		
 		if(us.getWorkAddress().getAddress() != "") {
@@ -173,14 +155,9 @@ public class UserService {
 			wAdd.setId(us.getId());
 			wAdd.setUser(us);
 			us.setWorkAddress(wAdd);
-			
-			updQuery = "UPDATE webapp.work_address SET "
-					+ "workAddress = '" + wAdd.getAddress() + "'"
-					+ " WHERE user_id = '" + us.getId() + "';";
-			queries.add(updQuery);
 		}
 		
-		if(um.update(queries)) {
+		if(um.update(us)) {
 			return Response.status(200).entity("Successfully updated user " + us.getName()).build();
 		} 		
 		return Response.status(200).entity("Failed updating user " + us.getName()).build();
